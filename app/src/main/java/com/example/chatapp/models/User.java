@@ -1,5 +1,6 @@
 package com.example.chatapp.models;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 public class User implements IUser {
@@ -20,5 +21,23 @@ public class User implements IUser {
     @Override
     public String getAvatar() {
         return avatar;
+    }
+
+    public static User userFromFirebaseUser(FirebaseUser firebaseUser)
+    {
+        User user = new User();
+        user.id = firebaseUser.getUid();
+        user.name = firebaseUser.getDisplayName();
+
+        if (firebaseUser.getPhotoUrl() != null)
+        {
+            user.avatar = firebaseUser.getPhotoUrl().getPath();
+        }
+        else
+        {
+            user.avatar = "";
+        }
+
+        return user;
     }
 }
