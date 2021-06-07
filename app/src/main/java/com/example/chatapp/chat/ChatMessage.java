@@ -1,5 +1,6 @@
 package com.example.chatapp.chat;
 
+import com.example.chatapp.models.Message;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
 
@@ -10,14 +11,15 @@ import java.util.Map;
 public class ChatMessage implements IMessage {
     String id;
     String text;
-    User user;
+    ChatUser user;
     Date createdAt;
 
-    public Message(String text, User user)
+    public ChatMessage(Message message)
     {
-        this.text = text;
-        this.user = user;
-        this.createdAt = new Date();
+        this.id = message.getId();
+        this.text = message.getText();
+        this.user = new ChatUser(message.getUser());
+        this.createdAt = message.getCreatedAt();
     }
 
 
@@ -41,6 +43,7 @@ public class ChatMessage implements IMessage {
         return createdAt;
     }
 
+    /*
     public Map<String, Object> hashMap() {
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("text", text);
@@ -49,5 +52,7 @@ public class ChatMessage implements IMessage {
 
         return hashMap;
     }
+
+     */
 }
 

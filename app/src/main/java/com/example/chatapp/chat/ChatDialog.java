@@ -1,7 +1,9 @@
-package com.example.chatapp.models;
+package com.example.chatapp.chat;
 
 import com.example.chatapp.chat.ChatMessage;
 import com.example.chatapp.chat.ChatUser;
+import com.example.chatapp.models.Dialog;
+import com.example.chatapp.models.User;
 import com.google.firebase.firestore.Exclude;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IMessage;
@@ -14,7 +16,7 @@ public class ChatDialog implements IDialog<ChatMessage> {
     String id;
     String dialogPhoto;
     String dialogName;
-    ArrayList<User> users = new ArrayList<>();
+    ArrayList<ChatUser> users = new ArrayList<ChatUser>();
     ChatMessage lastMessage;
     int unreadCount;
 
@@ -50,7 +52,7 @@ public class ChatDialog implements IDialog<ChatMessage> {
     }
 
     @Override
-    public List<ChatUser> getUsers() {
+    public ArrayList<ChatUser> getUsers() {
         return users;
     }
 
