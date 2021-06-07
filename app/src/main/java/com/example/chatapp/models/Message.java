@@ -13,6 +13,10 @@ public class Message implements Serializable {
     String text;
     User user;
     Date createdAt;
+    public  Message()
+    {
+
+    }
 
     public Message(String text, User user)
     {
@@ -37,7 +41,7 @@ public class Message implements Serializable {
         return createdAt;
     }
 
-    /*
+/*
     public Map<String, Object> hashMap() {
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("text", text);
@@ -46,7 +50,7 @@ public class Message implements Serializable {
 
         return hashMap;
     }
+*/
 
-     */
 }
 

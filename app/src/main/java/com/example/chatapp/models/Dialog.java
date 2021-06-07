@@ -11,7 +11,7 @@ public class Dialog implements Serializable {
     String id;
     String dialogPhoto;
     String dialogName;
-    ArrayList<User> users = new ArrayList<>();
+    ArrayList<User> users = new ArrayList<User>();
     Message lastMessage;
     int unreadCount;
 
@@ -27,7 +27,6 @@ public class Dialog implements Serializable {
         this.lastMessage = firstMessage;
         this.unreadCount = 0;
     }
-
 
     public String getId() {
         return id;
@@ -74,4 +73,14 @@ public class Dialog implements Serializable {
         return  hashMap;
     }
    */
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id.equals(((Dialog)obj).id);
+    }
+
+    @Override
+    public  int hashCode() {
+        return this.id.hashCode();
+    }
 }

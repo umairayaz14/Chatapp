@@ -1,7 +1,6 @@
 package com.example.chatapp;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -16,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import com.example.chatapp.models.ChatDialog;
+import com.example.chatapp.chat.ChatDialog;
+import com.example.chatapp.models.Dialog;
 import com.example.chatapp.models.Message;
 import com.example.chatapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,8 +24,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -50,7 +52,7 @@ public class ChatListFragment extends Fragment {
     private static final String TAG = " ";
     //ArrayList<ChatDialog> chats = new ArrayList<>();
 
-    ArrayList<ChatDialog> chats = new ArrayList<>();
+    ArrayList<Dialog> chats = new ArrayList<>();
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
@@ -95,6 +97,7 @@ public class ChatListFragment extends Fragment {
             }
         });
 
+        listenToIncomingChats();
         getChatsList();
         //startChat();
 /*
@@ -132,6 +135,16 @@ public class ChatListFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("Chat List", document.getId() + " => " + document.getData());
 
+                                Dialog dialog = document.toObject(Dialog.class);
+                                dialog.setId(document.getId());
+
+                                if (!chats.contains(dialog))
+                                {
+                                    ChatDialog chatDialog = new ChatDialog(dialog);
+                                    DialogsListAdapter adapter = (DialogsListAdapter) dialogsList.getAdapter();
+                                    adapter.addItem(chatDialog);
+                                    chats.add(dialog);
+                                }
                                // ChatDialog chatDialog = document.toObject(ChatDialog.class);
                                // DialogsListAdapter adapter = (DialogsListAdapter)dialogsList.getAdapter();
                                // adapter.addItem(chatDialog);
@@ -146,10 +159,10 @@ public class ChatListFragment extends Fragment {
     private void startChat(String firstMessage) {
         User user = User.userFromFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
         Message newMessage = new Message(firstMessage, user);
-        ChatDialog newChat = new ChatDialog(newMessage);
+        Dialog newChat = new Dialog(newMessage);
 
         firestore.collection("chats")
-                .add(newChat.hashMap())
+                .add(newChat)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -188,6 +201,40 @@ public class ChatListFragment extends Fragment {
 
          */
     }
+
+    private  void listenToIncomingChats()
+    {
+        final CollectionReference collectionReference = firestore.collection("chats");
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if (error == null)
+                {
+                    for (QueryDocumentSnapshot document : value)
+                    {
+                        Dialog dialog = document.toObject(Dialog.class);
+                        dialog.setId(document.getId());
+
+                        if (!chats.contains(dialog))
+                        {
+                            ChatDialog chatDialog = new ChatDialog(dialog);
+                            DialogsListAdapter adapter = (DialogsListAdapter) dialogsList.getAdapter();
+                            adapter.addItem(chatDialog);
+
+                            chats.add(dialog);
+                        }
+                    }
+                }
+                else
+                {
+                    error.printStackTrace();
+                }
+            }
+        });
+    }
+
+
 
     private void  showChatDialogAlert()
     {
