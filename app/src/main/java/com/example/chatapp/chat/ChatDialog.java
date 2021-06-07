@@ -1,5 +1,7 @@
 package com.example.chatapp.models;
 
+import com.example.chatapp.chat.ChatMessage;
+import com.example.chatapp.chat.ChatUser;
 import com.google.firebase.firestore.Exclude;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IMessage;
@@ -8,22 +10,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatDialog implements IDialog {
-    public String id;
-    public String dialogPhoto;
-    public String dialogName;
-    @Exclude
-    public ArrayList<User> users = new ArrayList<>();
-    public IMessage lastMessage;
-    public int unreadCount;
+public class ChatDialog implements IDialog<ChatMessage> {
+    String id;
+    String dialogPhoto;
+    String dialogName;
+    ArrayList<User> users = new ArrayList<>();
+    ChatMessage lastMessage;
+    int unreadCount;
 
-    public ChatDialog(Message firstMessage)
+    public ChatDialog(Dialog dialog)
     {
-        this.dialogPhoto = "";
-        this.dialogName = firstMessage.text;
-        this.users.add(firstMessage.user);
-        this.lastMessage = firstMessage;
-        this.unreadCount = 0;
+        this.id = dialog.getId();
+        this.dialogPhoto = dialog.getDialogPhoto();
+        this.dialogName = dialog.getDialogName();
+
+        for (User user:dialog.getUsers())
+        {
+            this.users.add(new ChatUser(user));
+        }
+
+        this.lastMessage = new ChatMessage(dialog.getLastMessage());
+        this.unreadCount = getUnreadCount();
     }
 
 
@@ -43,17 +50,17 @@ public class ChatDialog implements IDialog {
     }
 
     @Override
-    public ArrayList<User> getUsers() {
+    public List<ChatUser> getUsers() {
         return users;
     }
 
     @Override
-    public IMessage getLastMessage() {
+    public ChatMessage getLastMessage() {
         return lastMessage;
     }
 
     @Override
-    public void setLastMessage(IMessage message) {
+    public void setLastMessage(ChatMessage message) {
 
         this.lastMessage = message;
     }
@@ -63,6 +70,7 @@ public class ChatDialog implements IDialog {
         return unreadCount;
     }
 
+    /*
     public Map<String, Object> hashMap() {
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("dialogPhoto", dialogPhoto);
@@ -72,5 +80,5 @@ public class ChatDialog implements IDialog {
         hashMap.put("unreadCount", unreadCount);
         return  hashMap;
     }
-
+   */
 }

@@ -1,4 +1,4 @@
 package com.example.chatapp.models;
 
-public class Message {
+public class Dialog {
 }

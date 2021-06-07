@@ -1,33 +1,38 @@
-package com.example.chatapp.models;
+package com.example.chatapp.chat;
 
+import com.example.chatapp.models.User;
 import com.google.firebase.auth.FirebaseUser;
 import com.stfalcon.chatkit.commons.models.IUser;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class ChatUser implements IUser {
     String id;
     String name;
     String avatar;
 
-    public User()
+    public ChatUser(User user)
     {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.avatar = user.getAvatar();
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getAvatar() {
         return avatar;
     }
 
 
-
+   /*
     public static User userFromFirebaseUser(FirebaseUser firebaseUser)
     {
         User user = new User();
@@ -45,5 +50,6 @@ public class User implements Serializable {
 
         return user;
     }
-
+    */
 }
+

@@ -131,6 +131,10 @@ public class ChatListFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("Chat List", document.getId() + " => " + document.getData());
+
+                               // ChatDialog chatDialog = document.toObject(ChatDialog.class);
+                               // DialogsListAdapter adapter = (DialogsListAdapter)dialogsList.getAdapter();
+                               // adapter.addItem(chatDialog);
                             }
                         } else {
                             Log.d("Chat List", "Error getting documents: ", task.getException());
