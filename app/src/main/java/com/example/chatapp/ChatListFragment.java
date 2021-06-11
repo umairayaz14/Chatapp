@@ -100,7 +100,28 @@ public class ChatListFragment extends Fragment {
         listenToIncomingChats();
         getChatsList();
         //startChat();
+/*
+        Map<String, Object> city = new HashMap<>();
+        city.put("name", "Los Angeles");
+        city.put("state", "CA");
+        city.put("country", "USA");
 
+        db.collection("cities").document("LA")
+                .set(city)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+
+ */
         return view;
     }
 
